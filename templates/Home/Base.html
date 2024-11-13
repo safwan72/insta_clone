@@ -20,26 +20,70 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="{% static 'css/new.css' %}" />
+
     <style>
-      .custom-sidebar {
-        background-color: #ffffff; /* White background */
-        color: black; /* Black text */
-      }
+.story-circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #ff007f; /* Instagram-like border color */
+  margin: auto;
+  display: block; /* Ensure the circle is block-level */
+}
 
-      .nav-link.active {
-        background-color: #ff5733; /* Optional: Active item color */
-        color: white; /* White text on active item */
-      }
+.story-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image fills the circle */
+}
 
-      .dropdown-menu .dropdown-menu-dark {
-        background-color: #f8f9fa !important; /* Light background for dropdown */
-        color: black !important; /* Black text */
-      }
+.username {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 8px;
+  font-weight: 600;
+  color: #333;
+}
 
-      .dropdown-item:hover {
-        background-color: #ff5733; /* Change on hover */
-        color: white; /* White text on hover */
-      }
+.story-carousel-wrapper {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 20px;
+  position: relative;
+}
+
+.story-carousel {
+  display: flex;
+  gap: 20px;
+}
+
+.carousel-item {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.next-arrow-btn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: none; /* Hidden initially */
+}
+
+.next-arrow-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
     </style>
   </head>
   <body>
@@ -204,12 +248,20 @@
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 style="margin-right: 7px"
-                width="16"
-                height="16"
+                width="30"
+                height="30"
                 fill="currentColor"
                 class="bi bi-search"
                 viewBox="0 0 16 16"
               >
+                <circle
+                  cx="8"
+                  cy="8"
+                  r="7.5"
+                  fill="none"
+                  stroke="red"
+                  stroke-width="1"
+                />
                 <!-- Define the image inside the SVG -->
                 <image
                   x="0"
@@ -234,13 +286,159 @@
       <!-- Main Content (if any) -->
       <div class="flex-grow-1 p-3">
         <div>
-            
+          <!-- <div class="d-flex">
+            {% comment %}
+            <div class="text-center">
+              <div class="story-circle">
+                <img
+                  src="{% static 'images/insta_cover_1.png' %}"
+                  alt="User Avatar"
+                />
+              </div>
+              <div class="username">@username</div>
+            </div>
+          </div> -->
+          {% endcomment %}
+          <!-- Story Carousel Wrapper -->
+          <div class="main-content">
+            <div class="story-wrapper">
+                <button class="prev-btn" id="prev-btn">‹</button>
+                <div class="story-container" id="story-container">
+                    <!-- Stories will be dynamically loaded here -->
+                </div>
+                <button class="next-btn" id="next-btn">›</button>
+            </div>
         </div>
-        <h1>Main Content</h1>
-        <p>This is the main content area.</p>
+          <h1>Main Content</h1>
+          <p>This is the main content area.</p>
+        </div>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+    <!-- <script>
+      const carouselWrapper = document.getElementById("storyCarouselWrapper");
+      const nextArrowBtn = document.getElementById("nextArrowBtn");
+
+      // Function to check if we reached the end of the visible stories
+      function checkIfEndReached() {
+        const maxScroll =
+          carouselWrapper.scrollWidth - carouselWrapper.clientWidth;
+        if (carouselWrapper.scrollLeft >= maxScroll) {
+          nextArrowBtn.style.display = "none"; // Hide the next arrow if we're at the end
+        } else {
+          nextArrowBtn.style.display = "block"; // Show the next arrow if not at the end
+        }
+      }
+
+      // Scroll right by one item when the "next" button is clicked
+      nextArrowBtn.addEventListener("click", () => {
+        const itemWidth =
+          document.querySelector(".carousel-item").offsetWidth + 20; // account for the gap
+        carouselWrapper.scrollBy({
+          left: itemWidth,
+          behavior: "smooth",
+        });
+        checkIfEndReached(); // Check if we're at the end
+      });
+
+      // Detect scroll position to show/hide the "next" arrow on load and scroll
+      carouselWrapper.addEventListener("scroll", checkIfEndReached);
+      window.addEventListener("load", checkIfEndReached); // Ensure the button is set up correctly on page load
+    </script> -->
+  
+<script>
+// List of 50 stories to simulate data
+const stories = [];
+for (let i = 1; i <= 50; i++) {
+    stories.push({
+        img: `https://via.placeholder.com/80?text=Story+${i}`,
+        username: `User${i}`
+    });
+}
+
+let currentIndex = 0; // Tracks the current set of stories being displayed
+
+const storyContainer = document.getElementById('story-container');
+const nextButton = document.getElementById('next-btn');
+const prevButton = document.getElementById('prev-btn');
+
+// Function to render the current set of stories
+function renderStories() {
+    storyContainer.innerHTML = ''; // Clear the current stories
+
+    // Loop through the stories to display them
+    stories.forEach(story => {
+        const storyElement = document.createElement('div');
+        storyElement.classList.add('story');
+
+        storyElement.innerHTML = `
+            <div class="circle">
+                <img src="${story.img}" alt="Story" class="story-img">
+            </div>
+            <p class="username">${story.username}</p>
+        `;
+
+        storyContainer.appendChild(storyElement);
+    });
+
+    // Adjust button visibility based on container width and viewport
+    adjustButtonVisibility();
+}
+
+// Function to adjust visibility of Next and Previous buttons
+function adjustButtonVisibility() {
+    // Get the width of the container and the available viewport width
+    const containerWidth = storyContainer.scrollWidth;
+    const viewportWidth = window.innerWidth - 200; // Subtract the sidebar width
+
+    // Show the Next button if the container width exceeds the available space
+    if (containerWidth > viewportWidth) {
+        nextButton.style.display = 'block';
+    } else {
+        nextButton.style.display = 'none';
+    }
+
+    // Show the Previous button if we are not at the start
+    if (currentIndex > 0) {
+        prevButton.style.display = 'block';
+    } else {
+        prevButton.style.display = 'none';
+    }
+}
+
+// Function to scroll the container based on the number of visible stories
+function scrollStories(direction) {
+    const storyWidth = document.querySelector('.story').offsetWidth + 20; // Get the width of a story and account for the gap
+
+    // If direction is "next", move forward by the width of one story container (move right)
+    if (direction === 'next') {
+        currentIndex += 1; // Increase by 1 story index
+        storyContainer.scrollBy({
+            left: storyWidth, // Scroll to the right
+            behavior: 'smooth'
+        });
+    }
+    // If direction is "prev", move backward by the width of one story container (move left)
+    else if (direction === 'prev') {
+        currentIndex -= 1; // Decrease by 1 story index
+        storyContainer.scrollBy({
+            left: -storyWidth, // Scroll to the left
+            behavior: 'smooth'
+        });
+    }
+
+    renderStories(); // Re-render the stories after scrolling
+}
+
+// Attach event listeners for Next and Previous buttons
+nextButton.addEventListener('click', () => scrollStories('next'));
+prevButton.addEventListener('click', () => scrollStories('prev'));
+
+// Initial render of the stories
+renderStories();
+
+</script>
+
+</body>
 </html>
