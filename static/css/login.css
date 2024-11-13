@@ -1,0 +1,30 @@
+.login_page img {
+    height: 650px;
+    margin: auto;
+}
+
+.parent_img {
+    position: relative;
+    text-align: right;
+}
+
+.child_img {
+    position: absolute;
+    top: 28px;
+    right: 59px;
+    overflow: hidden;
+    height: 550px !important;
+    opacity: 1;       
+  transition: opacity 2s ease-in-out;
+}
+
+
+.right_login img{
+    margin-bottom: 40px;
+}
+
+@media (max-width: 600px) {
+    .login_page {
+        display: none!important;
+    }
+}
