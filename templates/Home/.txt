@@ -1,0 +1,91 @@
+<script>
+    // List of 50 stories to simulate data
+    const stories = [];
+    for (let i = 1; i <= 50; i++) {
+      stories.push({
+        img: `https://via.placeholder.com/80?text=Story+${i}`,
+        username: `User${i}`,
+      });
+    }
+
+    let currentIndex = 0; // Tracks the current set of stories being displayed
+
+    const storyContainer = document.getElementById("story-container");
+    const nextButton = document.getElementById("next-btn");
+    const prevButton = document.getElementById("prev-btn");
+
+    // Function to render the current set of stories
+    function renderStories() {
+      storyContainer.innerHTML = ""; // Clear the current stories
+
+      // Loop through the stories to display them
+      stories.forEach((story) => {
+        const storyElement = document.createElement("div");
+        storyElement.classList.add("story");
+
+        storyElement.innerHTML = `
+          <div class="circle">
+              <img src="${story.img}" alt="Story" class="story-img">
+          </div>
+          <p class="username">${story.username}</p>
+      `;
+
+        storyContainer.appendChild(storyElement);
+      });
+
+      // Adjust button visibility based on container width and viewport
+      adjustButtonVisibility();
+    }
+
+    // Function to adjust visibility of Next and Previous buttons
+    function adjustButtonVisibility() {
+      // Get the width of the container and the available viewport width
+      const containerWidth = storyContainer.scrollWidth;
+      const viewportWidth = window.innerWidth - 200; // Subtract the sidebar width
+
+      // Show the Next button if the container width exceeds the available space
+      if (containerWidth > viewportWidth) {
+        nextButton.style.display = "block";
+      } else {
+        nextButton.style.display = "none";
+      }
+
+      // Show the Previous button if we are not at the start
+      if (currentIndex > 0) {
+        prevButton.style.display = "block";
+      } else {
+        prevButton.style.display = "none";
+      }
+    }
+
+    // Function to scroll the container based on the number of visible stories
+    function scrollStories(direction) {
+      const storyWidth = document.querySelector(".story").offsetWidth + 20; // Get the width of a story and account for the gap
+
+      // If direction is "next", move forward by the width of one story container (move right)
+      if (direction === "next") {
+        currentIndex += 1; // Increase by 1 story index
+        storyContainer.scrollBy({
+          left: storyWidth, // Scroll to the right
+          behavior: "smooth",
+        });
+      }
+      // If direction is "prev", move backward by the width of one story container (move left)
+      else if (direction === "prev") {
+        currentIndex -= 1; // Decrease by 1 story index
+        storyContainer.scrollBy({
+          left: -storyWidth, // Scroll to the left
+          behavior: "smooth",
+        });
+      }
+
+      renderStories(); // Re-render the stories after scrolling
+    }
+
+    // Attach event listeners for Next and Previous buttons
+    nextButton.addEventListener("click", () => scrollStories("next"));
+    prevButton.addEventListener("click", () => scrollStories("prev"));
+
+    // Initial render of the stories
+    renderStories();
+  </script>

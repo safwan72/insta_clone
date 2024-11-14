@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    max-width: 100%; /* Ensure it doesn't overflow the viewport */
+    width: 100%; /* Ensure it doesn't overflow the viewport */
 }
 
 /* Styling for the story container */
@@ -22,7 +22,7 @@
     gap: 20px;
     overflow: hidden; /* Hide overflowed content */
     transition: transform 0.3s ease-in-out; /* Smooth transition for sliding */
-    width: 700px; /* Fixed width for the story container */
+    width: calc(100vw - 242px);/* Fixed width for the story container */
 }
 
 /* Individual story section styling */
@@ -67,31 +67,26 @@
 }
 
 /* Styling for the previous and next buttons */
-button {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+.story-button {
+    background-color: transparent;
+    color: black;
     border: none;
-    padding: 10px;
-    font-size: 24px;
+    font-size: 35px;
     cursor: pointer;
     border-radius: 50%;
     position: absolute;
-    top: 50%;
+    top: 33%;
     transform: translateY(-50%);
     z-index: 10;
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
 .prev-btn {
-    left: 10px;
+    left: -15px;
 }
 
 .next-btn {
-    right: 10px;
+    right: -15px;
 }
 
 /* Hide the scrollbars */
@@ -102,4 +97,60 @@ button:hover {
 .story-container {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+}
+
+
+.photo-divs{
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.photo-card {
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .photo-card img {
+    width: 100%;
+    height: auto;
+  }
+  .photo-card-header, .photo-card-footer {
+    padding: 10px;
+  }
+  .photo-card-header .user-name {
+    font-weight: bold;
+  }
+  .photo-card-footer .likes-count {
+    font-weight: bold;
+  }
+
+.card{
+    border: 0;
+}
+
+
+  .card-header {
+    color: black;
+    background-color:transparent;
+    border-bottom:0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+  .card-header p{
+margin: 0;
+margin-left: 10px;
+}
+
+.card-title-icons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.card-title-icons div{
+    margin-right: 6px;
 }
