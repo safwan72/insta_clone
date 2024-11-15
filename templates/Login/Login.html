@@ -1,43 +1,28 @@
-{% extends 'Login/PreLogin.html' %}
+{% extends 'Login/Signup.html' %}
 {% load static %}
-
+{% load widget_tweaks %} 
 
 {% block login_block %}
-<form>
+<form method='POST'>
+  {% csrf_token %}
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label"
+      <label for="email" class="form-label"
         >Email address</label
       >
-      <input
-        type="email"
-        class="form-control"
-        id="exampleInputEmail1"
-        aria-describedby="emailHelp"
-      />
+      {{form.username|add_class:username_class}}
       {% comment %} <div id="emailHelp" class="form-text">
         We'll never share your email with anyone else.
       </div> {% endcomment %}
     </div>
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label"
+      <label for="password" class="form-label"
         >Password</label
       >
-      <input
-        type="password"
-        class="form-control"
-        id="exampleInputPassword1"
-      />
+      {{ form.password|add_class:username_class }}
     </div>
-    <div class="mb-3 form-check">
-      <input
-        type="checkbox"
-        class="form-check-input"
-        id="exampleCheck1"
-      />
-      <label class="form-check-label" for="exampleCheck1"
-        >Check me out</label
-      >
+    <div class="form-text my-2">
+    Dont have an account yet? <a href="{% url 'App_Login:signup' %}">Create account Now!!! </a>  
     </div>
-    <button type="submit" class="btn btn-primary">Signup</button>
+    <button type="submit" class="btn btn-primary">Login</button>
   </form>
 {% endblock %}

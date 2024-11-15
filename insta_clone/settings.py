@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "Main",
     "whitenoise.runserver_nostatic",
     "django_cleanup.apps.CleanupConfig",
+     'widget_tweaks',  # Add this line
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'insta_clone.urls'
 DATABASE_CONNECTION_POOLING = False
+
+AUTH_USER_MODEL = "Login.User"
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

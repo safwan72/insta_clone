@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %} 
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,45 +29,41 @@
           >
             <img src="{% static 'images/instaicon.png' %}" />
             {% block login_block %}
-            <form>
+            <form method='POST'>
+              {% csrf_token %}
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label"
                   >Email address</label
                 >
-                <input
-                  type="email"
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                />
-                {% comment %}
-                <div id="emailHelp" class="form-text">
-                  We'll never share your email with anyone else.
-                </div>
-                {% endcomment %}
-              </div>
+             {{form.email|add_class:username_class}}
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label"
+                  >Username</label
+                >
+                {{form.username|add_class:username_class}}
+
               <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label"
                   >Password</label
                 >
-                <input
-                  type="password"
-                  class="form-control"
-                  id="exampleInputPassword1"
-                />
+                {{form.password1|add_class:username_class}}
+
               </div>
-              <div class="mb-3 form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="exampleCheck1"
-                />
-                <label class="form-check-label" for="exampleCheck1"
-                  >Check me out</label
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label"
+                  >Confirm Password</label
                 >
+                {{form.password2|add_class:username_class}}
+
               </div>
-              <button type="submit" class="btn btn-primary">Login</button>
+              <div class="form-text my-2">
+                Login Now!!! <a href="{% url 'App_Login:login' %}">Login </a>  
+                </div>
+              <button type="submit" class="btn btn-primary">Signup</button>
             </form>
+            {% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
             {% endblock %}
           </div>
         </div>
