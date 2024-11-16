@@ -25,4 +25,14 @@
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
+
+  {% if form.errors %}
+  <ul class='my-3'>
+    {% for field in form %}
+      {% for error in field.errors %}
+        <li class='text-danger my-1' style="list-style-type:none;font-weight:bold;">--- {{ error }}</li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+{% endif %}
 {% endblock %}

@@ -40,6 +40,9 @@ def sign_index(request):
             # user.save()
             messages.success(request, 'Account Created Successfully')
             return HttpResponseRedirect(reverse('App_Login:login'))
-        else:
-            print(request)
     return render(request, "Login/Signup.html",context={'form': form,'username_class': 'form-control',})
+
+
+def myprofile(request):
+    
+    return render(request, "Profile/Profile.html",context={})
