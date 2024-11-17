@@ -35,7 +35,7 @@ def upload_image(instance, filename):
 class Image(models.Model):
     post = models.ForeignKey(Posts, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to=upload_image,blank=True)
-    
+    main_img=models.BooleanField(default=False)
     def __str__(self):
         return f"Image for Post {self.post.id}"
 

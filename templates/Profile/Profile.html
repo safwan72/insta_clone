@@ -5,6 +5,8 @@
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor:pointer;
+    width:300px;
+    height:300px;
   }
   .gallery-item {
     margin-bottom: 15px;
@@ -59,50 +61,47 @@
    </div> 
    <div class="row g-4 my-5">
 
-    <!-- Gallery item 1 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 1">
+    {% for post in posts %}
+    {% if post.featured_image %}
+    <div class="col-sm-6 col-lg-4 gallery-item">
+      {% comment %} <img src="{{ post.featured_image.image.url }}"  class="gallery-img" loading="lazy" alt="Gallery Image 1" data-bs-toggle="modal" data-bs-target="#photoModal{{ image.id }}"> {% endcomment %}
+      <img src="{{ post.featured_image.image.url }}" class="gallery-img" loading="lazy" data-bs-toggle="modal" data-bs-target="#carouselModal{{ post.id }}">
     </div>
-
-    <!-- Gallery item 2 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 2">
-    </div>
-
-    <!-- Gallery item 3 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 3">
-    </div>
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 3">
-    </div>
-
-    <!-- Gallery item 4 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 4">
-    </div>
-
-    <!-- Gallery item 5 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 5">
-    </div>
-
-    <!-- Gallery item 6 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 6">
-    </div>
-
-    <!-- Gallery item 7 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 7">
-    </div>
-
-    <!-- Gallery item 8 -->
-    <div class="col-sm-6 col-md-4 col-lg-3 gallery-item">
-      <img src="https://via.placeholder.com/300" class="img-fluid gallery-img" loading="lazy" alt="Gallery Image 8">
-    </div>
+{% endif %}
 
   </div> <!-- End of Row -->
+  <div class="modal fade" id="carouselModal{{ post.id }}" tabindex="-1" aria-labelledby="carouselModalLabel{{ post.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="carouselModalLabel{{ post.id }}">Images for Post {{ post.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="carousel{{ post.id }}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in post.images.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image.image.url }}" class="d-block w-100" alt="Image {{ image.id }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ post.id }}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ post.id }}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 </div>
 
 

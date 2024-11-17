@@ -5,7 +5,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-
+from Main.models import Posts,Image
+from .models import Profile
 # Create your views here.
 
 def login_index(request):
@@ -44,5 +45,12 @@ def sign_index(request):
 
 
 def myprofile(request):
-    
-    return render(request, "Profile/Profile.html",context={})
+    numbers = range(1, 11)  # Generate a range of numbers from 1 to 10
+    user_profile = Profile.objects.get(user_id=2)
+    # Fetch all posts by the user
+    posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags')
+        # Fetch the featured image for each post (main_img=True)
+    for post in posts:
+        post.featured_image = post.images.filter(main_img=True).first()
+    print(posts)
+    return render(request, "Profile/Profile.html",context={'numbers':numbers,'posts':posts})
