@@ -61,3 +61,37 @@ class Comment(models.Model):
     
     def __str__(self):
         return self.comment
+    
+    
+def upload_image(instance, filename):
+    return "story/{instance.user.user.username}/{instance.user.user.username}{instance.story_upload_date}{instance.id}.png".format(instance=instance)
+
+
+from datetime import timedelta
+from django.utils import timezone
+    
+class Story(models.Model):
+    user=models.ForeignKey(Profile,on_delete=models.CASCADE,related_name='user_story')
+    story_upload_date=models.DateTimeField(auto_now_add=True)
+    story=models.ImageField(upload_to=upload_image,blank=True)    
+    expired=models.BooleanField(default=False)
+    class Meta:
+        verbose_name_plural='Story'
+        db_table = 'Story'
+    
+    def __str__(self):
+        return self.user.user.username +" Uploaded a story at "+str(self.story_upload_date)
+    def check_and_update_property(self):
+        # Get the current time
+        if self.story_upload_date is not None:
+            now = timezone.now()
+        # Check if the image is older than 24 hours
+            if now - self.story_upload_date > timedelta(hours=24):
+            # If the image is older than 24 hours, change the 'main_img' property
+                self.expired = True  # Example change: setting 'main_img' to False
+                self.save()  # Save the changes
+
+    def save(self, *args, **kwargs):
+        # Check and update property before saving
+        self.check_and_update_property()
+        super().save(*args, **kwargs)

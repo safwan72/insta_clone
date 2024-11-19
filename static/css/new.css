@@ -22,7 +22,7 @@
     gap: 20px;
     overflow: hidden; /* Hide overflowed content */
     transition: transform 0.3s ease-in-out; /* Smooth transition for sliding */
-    width: calc(100vw - 242px);/* Fixed width for the story container */
+    width: calc(100vw - 335px);/* Fixed width for the story container */
 }
 
 /* Individual story section styling */
@@ -46,6 +46,10 @@
     transition: border-color 0.3s ease;
 }
 
+.circle svg {
+    width: 100%;  /* SVG takes up 100% of the circle's width */
+    height: 100%; /* SVG takes up 100% of the circle's height */
+  }
 /* Image inside the circle */
 .story-img {
     width: 100%;

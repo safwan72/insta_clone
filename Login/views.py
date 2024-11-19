@@ -42,9 +42,16 @@ def sign_index(request):
             messages.success(request, 'Account Created Successfully')
             return HttpResponseRedirect(reverse('App_Login:login'))
     return render(request, "Login/Signup.html",context={'form': form,'username_class': 'form-control',})
+from django.utils import timezone
 
 @login_required
 def myprofile(request):
+    
+
+# Get the current time zone
+    current_timezone = timezone.get_current_timezone()
+    print(f"Current Timezone: {current_timezone}")    
+    
     numbers = range(1, 11)  # Generate a range of numbers from 1 to 10
     user_profile = Profile.objects.get(user_id=2)
     # Fetch all posts by the user

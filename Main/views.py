@@ -23,8 +23,25 @@ def home_index(request):
             for post in mypost:
                 posts.append(post)
             # print(posts)
-    return render(request, "Home/Home.html")
+            
+    stories=[]
+    userProfile=Profile.objects.filter(user_id=2)
+    if userProfile:
+        userProfile = userProfile[0]
+        user1 = userProfile.my_followers.all()
+        if user1:
+            for friend in user1:
+                all_stories = models.Story.objects.filter(user=friend.me).all()
+                if all_stories:
+                    for story in all_stories:
+                        stories.append(story)
 
+        # mypost = userProfile.post_author.all()
+        # if mypost:
+        #     for post in mypost:
+        #         posts.append(post)
+        print(stories)
+    return render(request, "Home/Home.html",context={'posts':posts,'stories':stories})
 
 
 
