@@ -38,19 +38,25 @@ def sign_index(request):
             # user.email=form.cleaned_data.get('email')
             # user.username=form.cleaned_data.get('username')
             # user.password=form.cleaned_data.get('password1')
-            # user.save()
+            user.save()
             messages.success(request, 'Account Created Successfully')
             return HttpResponseRedirect(reverse('App_Login:login'))
     return render(request, "Login/Signup.html",context={'form': form,'username_class': 'form-control',})
 
-
+@login_required
 def myprofile(request):
     numbers = range(1, 11)  # Generate a range of numbers from 1 to 10
     user_profile = Profile.objects.get(user_id=2)
     # Fetch all posts by the user
-    posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags')
+    posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags','post_comment')
         # Fetch the featured image for each post (main_img=True)
     for post in posts:
         post.featured_image = post.images.filter(main_img=True).first()
-    print(posts)
     return render(request, "Profile/Profile.html",context={'numbers':numbers,'posts':posts})
+
+
+@login_required
+def logout_user(request):
+    print("logout")
+    logout(request)
+    return HttpResponseRedirect(reverse('App_Login:login'))

@@ -22,10 +22,10 @@
     />
     <link rel="stylesheet" href="{% static 'css/new.css' %}" />
     <style>
-    {% block css_block %}
+      {% block css_block %}
 
 
-    {% endblock css_block %}
+      {% endblock css_block %}
     </style>
   </head>
   <body>
@@ -55,7 +55,11 @@
         </a>
         <ul class="nav nav-pills flex-column mb-auto" style="margin-top: 25px">
           <li class="nav-item">
-            <a href="#" class="nav-link text-dark" aria-current="page">
+            <a
+              href="{% url 'App_Main:home' %}"
+              class="nav-link text-dark"
+              aria-current="page"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -70,24 +74,6 @@
                 />
               </svg>
               Home
-            </a>
-          </li>
-          <li>
-            <a href="#" class="nav-link text-dark">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                style="margin-right: 7px"
-                height="16"
-                fill="currentColor"
-                class="bi bi-search"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-                />
-              </svg>
-              Search
             </a>
           </li>
           <li>
@@ -189,7 +175,7 @@
             </a>
           </li>
           <li>
-            <a href="#" class="nav-link text-dark">
+            <a href="{% url 'App_Login:profile' %}" class="nav-link text-dark">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 style="margin-right: 7px"
@@ -227,12 +213,36 @@
             </a>
           </li>
         </ul>
+        <div class="dropdown my-3">
+          <a
+            href="{% url 'App_Login:logout' %}"
+            class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+            aria-expanded="false"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="25"
+              fill="black"
+              class="bi bi-box-arrow-right"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"
+              />
+            </svg>
+            <strong style="color: black; margin-left: 5px">Logout</strong>
+          </a>
+        </div>
       </div>
       <!-- Main Content (if any) -->
       <div class="flex-grow-1 p-3" style="padding-left: 200px !important">
-        {% block body_block %}
-
-        {% endblock body_block %}
+        {% block body_block %} {% endblock body_block %}
       </div>
     </div>
 
@@ -268,8 +278,6 @@
       window.addEventListener("load", checkIfEndReached); // Ensure the button is set up correctly on page load
     </script> -->
 
-    {% block js_block %}
-    {% endblock js_block %}
-
+    {% block js_block %} {% endblock js_block %}
   </body>
 </html>

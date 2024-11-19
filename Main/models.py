@@ -3,7 +3,7 @@ from Login.models import Profile
 import re
 # Create your models here.
 class Posts(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)  # User who created the post
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name="post_author")  # User who created the post
     caption = models.TextField()  # Caption with hashtags
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -47,3 +47,17 @@ class Hashtag(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+class Comment(models.Model):
+    post=models.ForeignKey(Posts,on_delete=models.CASCADE,related_name='post_comment')
+    user=models.ForeignKey(Profile,on_delete=models.CASCADE,related_name='user_comment')
+    comment=models.TextField()
+    comment_date=models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural='Comment'
+        db_table = 'Comment'
+    
+    def __str__(self):
+        return self.comment

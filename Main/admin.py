@@ -5,3 +5,4 @@ from . import models
 admin.site.register(models.Posts)
 admin.site.register(models.Image)
 admin.site.register(models.Hashtag)
+admin.site.register(models.Comment)
