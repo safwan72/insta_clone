@@ -14,7 +14,6 @@ def login_index(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             email = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=email, password=password)
@@ -46,8 +45,6 @@ from django.utils import timezone
 
 @login_required
 def myprofile(request):
-    
-
 # Get the current time zone
     current_timezone = timezone.get_current_timezone()
     print(f"Current Timezone: {current_timezone}")    

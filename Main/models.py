@@ -29,7 +29,14 @@ def upload_image(instance, filename):
     return "Posts/{instance.post.user.user.username}/{instance.post.id}_posts.png".format(instance=instance)
 
 
-
+class Like(models.Model):
+    post=models.ForeignKey(Posts,on_delete=models.CASCADE,related_name='liked_post')
+    user=models.ForeignKey(Profile,on_delete=models.CASCADE,related_name='liker')
+    liked_date=models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.post.id +" liked by "+self.user.username
+    
 
 # Model to represent an Image associated with a Post
 class Image(models.Model):
