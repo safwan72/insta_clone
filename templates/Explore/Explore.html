@@ -1,0 +1,41 @@
+{% extends 'Base.html' %} {% load static %} {% block css_block %} {% endblock css_block %} {% block body_block %}
+
+<div class="container" style="margin: auto; width: 80%; margin-top: 45px">
+<div>
+    <h4 style="margin-bottom:10px;">User List</h4>
+    <ul class="list-group">
+        {% for user in users %}
+        <li class="list-group-item my-2" >
+            <div class='row' style="align-items:center;">
+                <div class='col-7' >
+                    <a href="{% url 'App_Login:profile' user.user.id %}" style="display:flex;justify-items:center;text-decoration:none;list-style-type:none;color:black;cursor:pointer;" >
+                    <img
+                    src="{{ user.profile_pic.url }}"
+                    alt=".."
+                    class="rounded-circle border border-dark"
+                    width="35"
+                    height="35"
+                  />
+                  <p style="margin-left:5px;margin-bottom:0;">{{user.user.username}}</p>
+                    </a>
+                </div>
+                <div class='col-5'>
+                    <div style="display:flex;align-items:center;">
+                        {% if user.is_following%}
+                        <button type="button" class="btn btn-primary mt-3">Follow</button>
+                        {% endif%}
+                    </div>
+
+                </div>
+            </div>
+            
+        </li>
+        {% endfor %}
+
+      </ul>
+</div>
+</div>
+
+
+
+{% endblock body_block %}

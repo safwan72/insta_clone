@@ -9,7 +9,7 @@ from django.contrib.auth.models import (
 from django.utils.translation import gettext_lazy
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+import uuid
 
 # Create your models here.
 
@@ -46,6 +46,7 @@ class MyuserManager(
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, null=False)
     username = models.CharField(max_length=264,unique=True)
     is_staff = models.BooleanField(
@@ -83,6 +84,7 @@ class Profile(models.Model):
     ]
 
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name="userprofile")
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     full_name = models.CharField(max_length=264, blank=True)
     profile_pic=models.ImageField(upload_to=upload_image,blank=True,default='/avatar.jpg')    
     phone = models.CharField(max_length=20, blank=True)

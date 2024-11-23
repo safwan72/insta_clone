@@ -77,7 +77,7 @@
             </a>
           </li>
           <li>
-            <a href="#" class="nav-link text-dark">
+            <a href="{% url 'App_Main:explore' %}" class="nav-link text-dark">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 style="margin-right: 7px"
@@ -175,7 +175,7 @@
             </a>
           </li>
           <li>
-            <a href="{% url 'App_Login:profile' %}" class="nav-link text-dark">
+            <a href="{% url 'App_Login:profile' request.user.id %}" class="nav-link text-dark">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 style="margin-right: 7px"
@@ -209,7 +209,7 @@
                 />
                 {% endcomment %}
               </svg>
-              Profile
+              {{request.user.username}}
             </a>
           </li>
         </ul>

@@ -7,7 +7,7 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
 <div class="container" style="margin: auto; width: 80%; margin-top: 45px">
   <div class="row">
     <div class="col-5 align-self-center" style="text-align: end">
-      <img src="http://smiledotnet.xyz/failed.png" height="150" width="150" style="
+      <img src="{{profile.profile_pic.url}}" height="150" width="150" style="
           border-radius: 50%;
           border: 1px solid darkgrey;
           margin-right: 20px;
@@ -15,21 +15,28 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
     </div>
     <div class="col-7 align-self-center">
       <div class="d-flex flex-column">
-        <h5 style="margin-top: 10px">Username</h5>
+        <h5 style="margin-top: 10px">{{profile.user.username}}</h5>
         <div class="d-flex">
-          <p style="margin-right: 14px">10 Posts</p>
-          <p style="margin-right: 14px">100 follower</p>
-          <p style="margin-right: 14px">200 following</p>
+          <p style="margin-right: 14px">{{post_count}} Posts</p>
+          <p style="margin-right: 14px">{{followers_count}} followers</p>
+          <p style="margin-right: 14px">{{following_count}} following</p>
         </div>
       </div>
       <div class="mt-2">
-        <p style="margin-bottom: 0">Full Name</p>
-        <p style="margin-bottom: 0">Bio</p>
-        <p style="margin-bottom: 0">Website</p>
+        <p style="margin-bottom: 0">{{profile.full_name}}</p>
+        <pre style="margin-bottom: 0">{{profile.bio}}</pre>
+        <p style="margin-bottom: 0">{{profile.website}}</p>
         <p style="margin-bottom: 0">Followed By : another user</p>
       </div>
-      <button type="button" class="btn btn-primary mt-3">Follow</button>
+      {% if not my_profile %}
+      {% if already_followed %}
       <button type="button" class="btn btn-primary mt-3">Following</button>
+      {%endif%}
+      {% if not already_followed %}
+
+      <button type="button" class="btn btn-primary mt-3">Follow</button>
+      {% endif %}
+      {% endif %}
     </div>
   </div>
   <hr />

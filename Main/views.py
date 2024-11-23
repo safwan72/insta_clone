@@ -11,14 +11,14 @@ def home_index(request):
         form = forms.ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             story=form.save(commit=False)
-            user_profile = Profile.objects.get(user_id=2)# Save the uploaded image to the database
+            user_profile = Profile.objects.get(user_id=request.user.id)# Save the uploaded image to the database
             story.user=user_profile
             story.save()
             return HttpResponseRedirect(reverse('App_Main:home'))
     else:
         form = forms.ImageUploadForm()    
     posts=[]
-    userProfile=Profile.objects.filter(user_id=2)
+    userProfile=Profile.objects.filter(user_id=request.user.id)
     if userProfile:
         userProfile = userProfile[0]
         user1 = userProfile.my_followers.all()
@@ -30,26 +30,46 @@ def home_index(request):
                 if all_post:
                     for post in all_post:
                         post.featured_image = post.images.filter(main_img=True).first()
-                        print(post.hashtags)
-                        print(post.images)
+                    if post.id not in [p.id for p in posts]:
                         posts.append(post)
             
     stories=[]
-    userProfile=Profile.objects.filter(user_id=2)
+    userProfile=Profile.objects.filter(user_id=request.user.id)
     if userProfile:
         userProfile = userProfile[0]
         my_stories = models.Story.objects.filter(user=userProfile).all()
         if my_stories:
             for story in my_stories:
-                stories.append(story)
+                story.is_expired()
+                if(story.expired==False):
+                    print(story,story.expired)
+                    stories.append(story)
         user1 = userProfile.my_followers.all()
         if user1:
             for friend in user1:
                 all_stories = models.Story.objects.filter(user=friend.me).all()
                 if all_stories:
                     for story in all_stories:
-                        stories.append(story)
+                        story.is_expired()
+                        if(story.expired==False):
+                            print(story,story.expired)
+                            stories.append(story)
+        print(stories)                    
     return render(request, "Home/Home.html",context={'posts':posts,'stories':stories,'form':form})
+
+
+
+def explore_view(request):
+    users=Profile.objects.all()
+    my_user_id=Profile.objects.get(user__id=request.user.id)
+    already_followed = Followers.objects.filter(me=my_user_id).first()
+
+    if users:
+        for user in users:
+            if already_followed and user in already_followed.myfollowers.all():
+                user.is_following=True
+    return render(request, "Explore/Explore.html",context={"users":users})
+
 
 
 

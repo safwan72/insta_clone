@@ -1,12 +1,14 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
-from . import forms, models
+from . import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from Main.models import Posts,Image
-from .models import Profile
+from .models import Profile,Followers
+from django.db.models import Q,Count
+
 # Create your views here.
 
 def login_index(request):
@@ -44,19 +46,46 @@ def sign_index(request):
 from django.utils import timezone
 
 @login_required
-def myprofile(request):
+def myprofile(request,id):
 # Get the current time zone
-    current_timezone = timezone.get_current_timezone()
-    print(f"Current Timezone: {current_timezone}")    
-    
-    numbers = range(1, 11)  # Generate a range of numbers from 1 to 10
-    user_profile = Profile.objects.get(user_id=2)
+    user_profile = Profile.objects.get(user_id=id)
+    my_user_id=Profile.objects.get(user__id=request.user.id)
+            # Get the count of posts for this user
+    my_profile=True if user_profile.user==request.user else False
+    post_count = Posts.objects.filter(user=user_profile).count()
+            
+            # Get the count of followers for this user
+    followers_count = Followers.objects.filter(me=user_profile).first()
+    if followers_count:
+        followers_count = followers_count.myfollowers.count()
+    else:
+        followers_count = 0
+
+            # Get the count of following for this user
+    following_count = Followers.objects.filter(myfollowers=user_profile).count()
+    # already_followed=Followers.objects.get(me=my_user_id).myfollowers.all().filter(user_id=user_profile.id)
+    already_followed = Followers.objects.filter(me=my_user_id).first()
+    already_following=False
+# Check if the `myfollowers` Many-to-Many field contains `user_profile`
+    if already_followed and user_profile in already_followed.myfollowers.all():
+        already_following=True  # The user is a follower
+    else:
+        already_following=False  # The user is not a follower
     # Fetch all posts by the user
     posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags','post_comment')
         # Fetch the featured image for each post (main_img=True)
     for post in posts:
         post.featured_image = post.images.filter(main_img=True).first()
-    return render(request, "Profile/Profile.html",context={'numbers':numbers,'posts':posts})
+    context = {
+                'profile': user_profile,
+                'post_count': post_count,
+                'followers_count': followers_count,
+                'following_count': following_count,
+                'posts':posts,
+                'my_profile':my_profile,
+                'already_followed':already_following,
+            }
+    return render(request, "Profile/Profile.html",context=context)
 
 
 @login_required

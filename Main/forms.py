@@ -7,3 +7,10 @@ class ImageUploadForm(forms.ModelForm):
     class Meta:
         model=models.Story
         fields = ['story']
+        
+        
+        
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model=models.Comment
+        fields = ['comment']

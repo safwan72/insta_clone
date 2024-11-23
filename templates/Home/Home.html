@@ -1,89 +1,126 @@
-{% extends 'Base.html' %}
-{% load static %}
-
-
-{% block body_block %}
+{% extends 'Base.html' %} {% load static %} {% block body_block %}
 <div>
   <div class="main-content">
-    <div style="display:flex;">
+    <div style="display: flex">
       <div class="story">
-        <div class="circle" style="border:none;width:50px;" data-bs-toggle="modal" data-bs-target="#uploadModal">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="lightgrey" class="bi bi-plus-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        <div
+          class="circle"
+          style="border: none; width: 50px"
+          data-bs-toggle="modal"
+          data-bs-target="#uploadModal"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="lightgrey"
+            class="bi bi-plus-circle"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+            />
+            <path
+              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+            />
           </svg>
         </div>
         <p class="username">Add Story</p>
       </div>
-      <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="uploadModal"
+        tabindex="-1"
+        aria-labelledby="uploadModalLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Image upload form inside the modal -->
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Upload Image</button>
-                    </form>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
+            <div class="modal-body">
+              <!-- Image upload form inside the modal -->
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %} {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">
+                  Upload Image
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    
-        <div class="story-wrapper">
-          <button class="prev-btn story-button" id="prev-btn">‹</button>
-          <div class="story-container" id="story-container">
-            {%for story in stories%}
-            <div class="story">
-              <div class="circle">
-                <img
-                  src="{{ story.story.url }}"
-                  alt="Story"
-                  class="story-img"
+      <div class="story-wrapper">
+        <button class="prev-btn story-button" id="prev-btn">‹</button>
+        <div class="story-container" id="story-container">
+          {%for story in stories%}
+          <div class="story">
+            <div class="circle">
+              <img
+                src="{{ story.story.url }}"
+                alt="Story"
+                class="story-img"
                 data-bs-toggle="modal"
-            data-bs-target="#carouselModal{{ story.id }}"
-                />
-              </div>
-              <p class="username">{{ story.user.user.username }}</p>
+                data-bs-target="#carouselModal{{ story.id }}"
+              />
             </div>
-            
-            {%endfor%}
-    
-            {%for story in stories%}
-            <div class="modal fade" id="carouselModal{{ story.id }}" tabindex="-1"
-            aria-labelledby="carouselModalLabel{{ story.id }}" aria-hidden="true">
+            <p class="username">{{ story.user.user.username }}</p>
+          </div>
+
+          {%endfor%} {%for story in stories%}
+          <div
+            class="modal fade"
+            id="carouselModal{{ story.id }}"
+            tabindex="-1"
+            aria-labelledby="carouselModalLabel{{ story.id }}"
+            aria-hidden="true"
+          >
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
+                <div class="modal-header">
+                  <p>Story Uploaded at: {{ story.story_upload_date|date:"H:i, d b, Y" }}</p>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <div class="modal-body">
-                  <img src="{{ story.story.url }}" class="d-block" alt="Image {{ image.id }}"
-                  style="width: 80%; height: 80%; object-fit: contain" />
+                  <img
+                    src="{{ story.story.url }}"
+                    class="d-block"
+                    alt="Image {{ image.id }}"
+                    style="width: 80%; height: 80%; object-fit: contain;margin:auto;"
+                  />
                 </div>
               </div>
             </div>
           </div>
-            {% endfor %}
-    
-      
-          </div>
-          <button class="next-btn story-button" id="next-btn">›</button>
+          {% endfor %}
         </div>
-
+        <button class="next-btn story-button" id="next-btn">›</button>
+      </div>
     </div>
-
-
-
   </div>
-  <div class="main-container" style="max-width: 50rem; width: 100%; margin: auto">
+  <div
+    class="main-container"
+    style="max-width: 50rem; width: 100%; margin: auto; margin-bottom: 50px"
+  >
+    {% for post in posts %}
 
-{% for post in posts %}
-    
     <div class="photo-divs">
-      <div class="card" style="max-width: 400px; width: 100%; height: auto;border:1px solid lightgrey;padding:6px;">
+      <div
+        class="card"
+        style="
+          max-width: 400px;
+          width: 100%;
+          height: auto;
+          border: 1px solid lightgrey;
+          padding: 6px;
+        "
+      >
         <h5 class="card-header card-header-profile">
           <div>
             <img
@@ -93,46 +130,78 @@
               width="35"
               height="35"
             />
-            <p>{{ post.user.user.username}}</p>
+            <p>
+              <a href="{% url 'App_Login:profile' post.user.user.id %}">
+                {{ post.user.user.username}}
+              </a>
+              </p>
           </div>
           <p class="fs-6">{{ post.created_at|date:"H:i, F-d, Y" }}</p>
         </h5>
 
         <!-- Portrait image container (aspect ratio 4:5) -->
-        <div class="card-img-container" style="position: relative; width: 100%;">
-          <div id="dynamicCarousel" class="carousel" data-ride="carousel">   
+        <div class="card-img-container" style="position: relative; width: 100%">
+          <div id="dynamicCarousel" class="carousel" data-ride="carousel">
             <!-- Carousel items -->
-            <div class="carousel-inner" id="carouselItems">
-                {% for image in post.images.all %}
-                    <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                    <img
-                    src="{{ image.image.url }}"
-                    alt="..."
-                    style="
-                      object-fit: cover;
-                      width: 100%;
-                      height: 100%;
-                      border-radius: 8px;
-                    "
-                  />
-                        {% comment %} <img src="{{ image.url }}" class="d-block w-100" alt="Image {{ forloop.counter }}"> {% endcomment %}
-                    </div>
-                {% endfor %}
+            <div
+              class="carousel-inner"
+              id="carouselItems"
+              style="height: 500px"
+            >
+              {% for image in post.images.all %}
+              <div
+                class="carousel-item {% if forloop.first %} active {% endif %}"
+              >
+                <img
+                  src="{{ image.image.url }}"
+                  alt="..."
+                  style="
+                    object-fit: contain;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    border-radius: 8px;
+                  "
+                />
+                {% comment %}
+                <img
+                  src="{{ image.url }}"
+                  class="d-block w-100"
+                  alt="Image {{ forloop.counter }}"
+                />
+                {% endcomment %}
+              </div>
+              {% endfor %}
             </div>
-        
-            <!-- Previous button -->
-            <a class="carousel-control-prev" href="#dynamicCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-        
-            <!-- Next button -->
-            <a class="carousel-control-next" href="#dynamicCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
 
+            <!-- Previous button -->
+            <a
+              class="carousel-control-prev"
+              href="#dynamicCarousel"
+              role="button"
+              data-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Previous</span>
+            </a>
+
+            <!-- Next button -->
+            <a
+              class="carousel-control-next"
+              href="#dynamicCarousel"
+              role="button"
+              data-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
         </div>
 
         <div class="card-body">
@@ -166,13 +235,36 @@
               </svg>
             </div>
           </h5>
-          <p class="card-text">{{post.like_count}} Likes      {{post.comment_count}} Comments </p>
+          <p class="card-text">
+            {{post.like_count}} Likes {{post.comment_count}} Comments
+          </p>
+          <div>
+            <p>{{post.caption}}</p>
+            <div style="margin-bottom:15px;">
+              {% for hashtag in post.hashtags.all %}
+              <span style="margin-right:5px;"> {{hashtag.name}} </span>
+              {%endfor%}
+            </div>
+          </div>
+          <div>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Recipient's username"
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+              />
+              <span class="input-group-text" id="basic-addon2"
+                >Comment</span
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    {% endfor %}
-
-    {% comment %} <div class="photo-divs">
+    {% endfor %} {% comment %}
+    <div class="photo-divs">
       <div class="card" style="max-width: 400px; width: 100%; height: auto">
         <h5 class="card-header card-header-profile">
           <img
@@ -187,49 +279,77 @@
         </h5>
 
         <!-- Portrait image container (aspect ratio 4:5) -->
-        <div class="card-img-container" style="position: relative; width: 100%; height: 500px">
+        <div
+          class="card-img-container"
+          style="position: relative; width: 100%; height: 500px"
+        >
           <div id="dynamicCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators" id="carouselIndicators">
-                <!-- Indicators will be dynamically injected here -->
-                {% for image in images %}
-                    <li data-target="#dynamicCarousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %} active {% endif %}"></li>
-                {% endfor %}
+              <!-- Indicators will be dynamically injected here -->
+              {% for image in images %}
+              <li
+                data-target="#dynamicCarousel"
+                data-slide-to="{{ forloop.counter0 }}"
+                class="{% if forloop.first %} active {% endif %}"
+              ></li>
+              {% endfor %}
             </ol>
-        
+
             <!-- Carousel items -->
             <div class="carousel-inner" id="carouselItems">
-                {% for image in images %}
-                    <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                      <img
-                      src="{% static 'images/insta_cover_1.png' %}"
-                      class="card-img-top"
-                      alt="..."
-                      style="
-                        object-fit: cover;
-                        width: 100%;
-                        height: 100%;
-                        border-radius: 8px;
-                      "
-                    />
-                        <img src="{{ image.url }}" class="d-block w-100" alt="Image {{ forloop.counter }}">
-                    </div>
-                {% endfor %}
+              {% for image in images %}
+              <div
+                class="carousel-item {% if forloop.first %} active {% endif %}"
+              >
+                <img
+                  src="{% static 'images/insta_cover_1.png' %}"
+                  class="card-img-top"
+                  alt="..."
+                  style="
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 8px;
+                  "
+                />
+                <img
+                  src="{{ image.url }}"
+                  class="d-block w-100"
+                  alt="Image {{ forloop.counter }}"
+                />
+              </div>
+              {% endfor %}
             </div>
-        
-            <!-- Previous button -->
-            <a class="carousel-control-prev" href="#dynamicCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-        
-            <!-- Next button -->
-            <a class="carousel-control-next" href="#dynamicCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
 
+            <!-- Previous button -->
+            <a
+              class="carousel-control-prev"
+              href="#dynamicCarousel"
+              role="button"
+              data-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Previous</span>
+            </a>
+
+            <!-- Next button -->
+            <a
+              class="carousel-control-next"
+              href="#dynamicCarousel"
+              role="button"
+              data-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
         </div>
 
         <div class="card-body">
@@ -267,71 +387,70 @@
           <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
       </div>
-    </div> {% endcomment %}
+    </div>
+    {% endcomment %}
   </div>
 </div>
-{% endblock body_block %}
-
-{% block js_block %}
+{% endblock body_block %} {% block js_block %}
 <script>
-    // List of 50 stories to simulate data
-    let currentIndex = 0; // Tracks the current set of stories being displayed
+  // List of 50 stories to simulate data
+  let currentIndex = 0; // Tracks the current set of stories being displayed
 
-    const storyContainer = document.getElementById("story-container");
-    const nextButton = document.getElementById("next-btn");
-    const prevButton = document.getElementById("prev-btn");
+  const storyContainer = document.getElementById("story-container");
+  const nextButton = document.getElementById("next-btn");
+  const prevButton = document.getElementById("prev-btn");
 
-    // Function to render the current set of stories
-    console.log(currentIndex);
+  // Function to render the current set of stories
+  console.log(currentIndex);
 
-    // Function to adjust visibility of Next and Previous buttons
-    function adjustButtonVisibility() {
-      // Get the width of the container and the available viewport width
-      const containerWidth = storyContainer.scrollWidth;
-      const viewportWidth = window.innerWidth - 200; // Subtract the sidebar width
+  // Function to adjust visibility of Next and Previous buttons
+  function adjustButtonVisibility() {
+    // Get the width of the container and the available viewport width
+    const containerWidth = storyContainer.scrollWidth;
+    const viewportWidth = window.innerWidth - 200; // Subtract the sidebar width
 
-      // Show the Next button if the container width exceeds the available space
-      if (containerWidth > viewportWidth) {
-        nextButton.style.display = "block";
-      } else {
-        nextButton.style.display = "none";
-      }
-
-      // Show the Previous button if we are not at the start
-      if (currentIndex > 0) {
-        prevButton.style.display = "block";
-      } else {
-        prevButton.style.display = "none";
-      }
+    // Show the Next button if the container width exceeds the available space
+    if (containerWidth > viewportWidth) {
+      nextButton.style.display = "block";
+    } else {
+      nextButton.style.display = "none";
     }
 
-    // Function to scroll the container based on the number of visible stories
-    function scrollStories(direction) {
-      const storyWidth = document.querySelector(".story").offsetWidth + 20; // Get the width of a story and account for the gap
-
-      // If direction is "next", move forward by the width of one story container (move right)
-      if (direction === "next") {
-        currentIndex += 1; // Increase by 1 story index
-        storyContainer.scrollBy({
-          left: storyWidth, // Scroll to the right
-          behavior: "smooth",
-        });
-      }
-      // If direction is "prev", move backward by the width of one story container (move left)
-      else if (direction === "prev") {
-        currentIndex -= 1; // Decrease by 1 story index
-        storyContainer.scrollBy({
-          left: -storyWidth, // Scroll to the left
-          behavior: "smooth",
-        });
-      }
+    // Show the Previous button if we are not at the start
+    if (currentIndex > 0) {
+      prevButton.style.display = "block";
+    } else {
+      prevButton.style.display = "none";
     }
+  }
 
-    // Attach event listeners for Next and Previous buttons
-    nextButton.addEventListener("click", () => scrollStories("next"));
-    prevButton.addEventListener("click", () => scrollStories("prev"));
-  </script>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  // Function to scroll the container based on the number of visible stories
+  function scrollStories(direction) {
+    const storyWidth = document.querySelector(".story").offsetWidth + 20; // Get the width of a story and account for the gap
+
+    // If direction is "next", move forward by the width of one story container (move right)
+    if (direction === "next") {
+      currentIndex += 1; // Increase by 1 story index
+      storyContainer.scrollBy({
+        left: storyWidth, // Scroll to the right
+        behavior: "smooth",
+      });
+    }
+    // If direction is "prev", move backward by the width of one story container (move left)
+    else if (direction === "prev") {
+      currentIndex -= 1; // Decrease by 1 story index
+      storyContainer.scrollBy({
+        left: -storyWidth, // Scroll to the left
+        behavior: "smooth",
+      });
+    }
+  }
+
+  // Attach event listeners for Next and Previous buttons
+  nextButton.addEventListener("click", () => scrollStories("next"));
+  prevButton.addEventListener("click", () => scrollStories("prev"));
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock js_block %}
