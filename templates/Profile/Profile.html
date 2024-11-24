@@ -41,6 +41,7 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
   </div>
   <hr />
 
+  {% if not already_followed and profile.is_private %}
   <div style="margin: auto; margin-top: 20px">
     <div class="row">
       <div class="col align-self-center" style="text-align: end">
@@ -63,6 +64,7 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
       </div>
     </div>
   </div>
+  {% else %}
   <div class="row g-4 my-5">
     {% for post in posts %} {% if post.featured_image %}
     <div class="col-sm-6 col-lg-4 gallery-item">
@@ -81,6 +83,8 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
+          {{profile.is_private}}
+
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -107,7 +111,7 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
                 </button>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6" style="height:400px;overflow-y:scroll;">
               {% for comment in post.post_comment.all %}
               <div style="display:flex;align-items:center;margin-bottom:15px;">
                 <div>
@@ -115,17 +119,20 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
                 </div>
                 <div style="margin-left:6px;">
                   <strong style="margin-bottom:4px;">{{comment.user.user.username}}</strong>
-                  <p style="margin-bottom:4px;">{{comment.comment}}</p>
+                  <p style="margin-bottom:4px;">{{comment.text}}</p>
                 </div>
               </div>
+              {% empty %}
+              <!-- Content when there are no posts -->
+              <p style="text-align:center;margin:5px 0;">No Comments yet at this post.</p>
               {% endfor %}
-              <form>
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" placeholder="Place your comment"
-                    aria-label="Recipient's username" aria-describedby="button-addon2" />
-                  <button class="btn btn-outline-secondary" type="button" id="button-addon2">
-                    Button
-                  </button>
+              <form method="POST">
+                <div class="input-group my-4">
+                  {% csrf_token %}{{ form1.text }}
+                  <input type="hidden" name="post_id" value="{{ post.id }}">
+                  <button type="submit" name="comment" class="btn btn-outline-secondary" 
+                    >Comment</button
+                  >
                 </div>
               </form>
             </div>
@@ -133,7 +140,13 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
         </div>
       </div>
     </div>
+    {% empty %}
+    <!-- Content when there are no posts -->
+    <h4 style="text-align:center;margin:15px 0;">No posts available at the moment.</h4>
     {% endfor %}
+
+    {%endif%}
+
   </div>
 
 </div>

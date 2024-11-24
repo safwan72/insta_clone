@@ -3,10 +3,10 @@
 <div class="container" style="margin: auto; width: 80%; margin-top: 45px">
 <div>
     <h4 style="margin-bottom:10px;">User List</h4>
-    <ul class="list-group">
+    <ul class="list-group" style="width:75%;margin:auto;">
         {% for user in users %}
         <li class="list-group-item my-2" >
-            <div class='row' style="align-items:center;">
+            <div class='row' style="align-items:center;padding:12px;">
                 <div class='col-7' >
                     <a href="{% url 'App_Login:profile' user.user.id %}" style="display:flex;justify-items:center;text-decoration:none;list-style-type:none;color:black;cursor:pointer;" >
                     <img
@@ -20,12 +20,12 @@
                     </a>
                 </div>
                 <div class='col-5'>
-                    <div style="display:flex;align-items:center;">
-                        {% if user.is_following%}
-                        <button type="button" class="btn btn-primary mt-3">Follow</button>
+                        {% if not user.is_following%}
+                        <button type="button" class="btn btn-primary">Follow</button>
                         {% endif%}
-                    </div>
-
+                        {% if user.is_following%}
+                        <button type="button" class="btn btn-primary">Following</button>
+                        {% endif%}
                 </div>
             </div>
             

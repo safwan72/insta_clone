@@ -47,7 +47,7 @@
               <!-- Image upload form inside the modal -->
               <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %} {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" name="story" class="btn btn-primary">
                   Upload Image
                 </button>
               </form>
@@ -247,18 +247,15 @@
             </div>
           </div>
           <div>
-            <div class="input-group mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Recipient's username"
-                aria-label="Recipient's username"
-                aria-describedby="basic-addon2"
-              />
-              <span class="input-group-text" id="basic-addon2"
-                >Comment</span
+            <form method="POST">
+            <div class="input-group my-4">
+              {% csrf_token %}{{ form1.text }}
+              <input type="hidden" name="post_id" value="{{ post.id }}">
+              <button type="submit" name="comment" class="btn btn-outline-secondary" 
+                >Comment</button
               >
             </div>
+          </form>
           </div>
         </div>
       </div>

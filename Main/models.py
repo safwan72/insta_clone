@@ -61,7 +61,7 @@ class Hashtag(models.Model):
 class Comment(models.Model):
     post=models.ForeignKey(Posts,on_delete=models.CASCADE,related_name='post_comment')
     user=models.ForeignKey(Profile,on_delete=models.CASCADE,related_name='user_comment')
-    comment=models.TextField()
+    text=models.CharField(max_length=255)
     comment_date=models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -69,7 +69,7 @@ class Comment(models.Model):
         db_table = 'Comment'
     
     def __str__(self):
-        return self.comment
+        return self.text
     
     
 def upload_image(instance, filename):

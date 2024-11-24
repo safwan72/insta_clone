@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse,get_object_or_404
 from django.urls import reverse, reverse_lazy
 from . import forms
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,7 +8,7 @@ from django.contrib import messages
 from Main.models import Posts,Image
 from .models import Profile,Followers
 from django.db.models import Q,Count
-
+from Main.forms import CommentForm
 # Create your views here.
 
 def login_index(request):
@@ -48,6 +48,7 @@ from django.utils import timezone
 @login_required
 def myprofile(request,id):
 # Get the current time zone
+    form1 = CommentForm(request.POST) if request.method == 'POST' else CommentForm()
     user_profile = Profile.objects.get(user_id=id)
     my_user_id=Profile.objects.get(user__id=request.user.id)
             # Get the count of posts for this user
@@ -60,7 +61,18 @@ def myprofile(request,id):
         followers_count = followers_count.myfollowers.count()
     else:
         followers_count = 0
-
+        
+    if request.method == 'POST' and 'comment' in request.POST:
+        if form1.is_valid():
+            post_id = request.POST.get('post_id')
+            post=get_object_or_404(Posts,id=post_id)
+            comment=form1.save(commit=False)
+            user_profile = Profile.objects.get(user_id=request.user.id)
+            comment.user=user_profile
+            comment.post=post
+            comment.save()
+            url = reverse('App_Login:profile', kwargs={'id': post.user.user.id})
+            return HttpResponseRedirect(url)
             # Get the count of following for this user
     following_count = Followers.objects.filter(myfollowers=user_profile).count()
     # already_followed=Followers.objects.get(me=my_user_id).myfollowers.all().filter(user_id=user_profile.id)
@@ -84,6 +96,7 @@ def myprofile(request,id):
                 'posts':posts,
                 'my_profile':my_profile,
                 'already_followed':already_following,
+                'form1':form1,
             }
     return render(request, "Profile/Profile.html",context=context)
 
