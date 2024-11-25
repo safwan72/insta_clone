@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse,get_object_or_404
 from django.urls import reverse, reverse_lazy
-from . import forms
+from . import forms,models
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
@@ -76,14 +76,18 @@ def myprofile(request,id):
             # Get the count of following for this user
     following_count = Followers.objects.filter(myfollowers=user_profile).count()
     # already_followed=Followers.objects.get(me=my_user_id).myfollowers.all().filter(user_id=user_profile.id)
-    already_followed = Followers.objects.filter(me=my_user_id).first()
+    already_followed = Followers.objects.filter(myfollowers=my_user_id)
     already_following=False
 # Check if the `myfollowers` Many-to-Many field contains `user_profile`
-    if already_followed and user_profile in already_followed.myfollowers.all():
-        already_following=True  # The user is a follower
-    else:
-        already_following=False  # The user is not a follower
+    if already_followed:
+            for follower in already_followed:  
+                if user_profile==follower.me:
+                    print(follower.me)
+                    print(user_profile)
+                    already_following=True  # The user is a follower
+# The user is not a follower
     # Fetch all posts by the user
+    print(already_following)
     posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags','post_comment')
         # Fetch the featured image for each post (main_img=True)
     for post in posts:
@@ -106,3 +110,34 @@ def logout_user(request):
     print("logout")
     logout(request)
     return HttpResponseRedirect(reverse('App_Login:login'))
+
+
+
+
+
+@login_required
+def follow(request,id):
+    user_profile = Profile.objects.get(user_id=id)
+    my_user_id=Profile.objects.get(user__id=request.user.id)
+    already_followed=models.Followers.objects.filter(me=user_profile)
+    print(already_followed)
+    if  already_followed:
+        for followers in already_followed:
+            followers.myfollowers.add(my_user_id)
+            followers.save()
+    return HttpResponseRedirect(reverse('App_Main:home'))
+   
+   
+@login_required
+def unfollow(request,id):
+    following_user=Profile.objects.get(user_id=id)
+    print(following_user)
+    follower_user=Profile.objects.get(user__id=request.user.id)
+    print(follower_user)
+    already_followed=models.Followers.objects.filter(me=following_user,myfollowers=follower_user)
+    if already_followed.exists():
+        for followers in already_followed:
+            if following_user==followers.me:
+            #     print(following_user.my_followers)
+                followers.myfollowers.remove(follower_user)
+    return HttpResponseRedirect(reverse('App_Main:home'))

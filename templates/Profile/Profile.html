@@ -30,11 +30,11 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
       </div>
       {% if not my_profile %}
       {% if already_followed %}
-      <button type="button" class="btn btn-primary mt-3">Following</button>
+      <a href="{% url 'App_Login:unfollow' profile.user.id %}" class="btn btn-primary mt-3">Following</a>
       {%endif%}
       {% if not already_followed %}
 
-      <button type="button" class="btn btn-primary mt-3">Follow</button>
+      <a href="{% url 'App_Login:follow' profile.user.id %}" class="btn btn-primary mt-3">Follow</a>
       {% endif %}
       {% endif %}
     </div>
