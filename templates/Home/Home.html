@@ -92,7 +92,7 @@
                     src="{{ story.story.url }}"
                     class="d-block"
                     alt="Image {{ image.id }}"
-                    style="width: 80%; height: 80%; object-fit: contain;margin:auto;"
+                    style="width: 100%; height: 400px; object-fit: contain;margin:auto;"
                   />
                 </div>
               </div>
@@ -104,6 +104,9 @@
       </div>
     </div>
   </div>
+
+  {% block extend_body_block %}
+
   <div
     class="main-container"
     style="max-width: 50rem; width: 100%; margin: auto; margin-bottom: 50px"
@@ -387,6 +390,8 @@
     </div>
     {% endcomment %}
   </div>
+  {% endblock extend_body_block %}
+
 </div>
 {% endblock body_block %} {% block js_block %}
 <script>

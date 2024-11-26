@@ -24,7 +24,7 @@
                         <a type="button" class="btn btn-primary" href="{% url 'App_Login:follow' user.user.id %}">Follow</a>
                         {% endif%}
                         {% if user.is_following%}
-                        <button type="button" class="btn btn-primary">Following</button>
+                        <a type="button" class="btn btn-primary" href="{% url 'App_Login:unfollow' user.user.id %}">Unfollow</a>
                         {% endif%}
                 </div>
             </div>

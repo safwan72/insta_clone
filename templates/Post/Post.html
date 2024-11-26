@@ -1,0 +1,91 @@
+{% extends 'Home/Home.html' %} {% load static %}
+{% block css_block %}
+.image-preview {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.image-preview img {
+    width: 150px;
+    height: 220px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+{% endblock css_block %}
+{% block extend_body_block %}
+<h4 style='text-align:center;my-3'>Add your POST</h4>
+<div class="container mt-5">
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h2>Create a New Post</h2>
+    
+        <!-- Post caption field -->
+        <div>
+            <label for="id_caption">Caption</label>
+            {{ form.caption }}
+        </div>
+    
+        <!-- Multiple image upload -->
+        <div>
+            <label for="id_images">Upload Images</label>
+            <input type="file" name="images" id="id_images" multiple>
+        </div>
+    
+        <!-- Image Preview Section -->
+        <div id="image-previews"></div>
+    
+        <!-- Main Image Selection -->
+        <div id="main-image-selection"></div>
+    
+        <button type="submit" class='btn btn-secondary'>Submit</button>
+    </form>
+</div>
+
+{% endblock extend_body_block %}
+
+{% block js_block %}
+<script>
+    document.getElementById("id_images").addEventListener("change", function(event) {
+        var imagePreviews = document.getElementById("image-previews");
+        var mainImageSelection = document.getElementById("main-image-selection");
+        
+        // Clear previous previews
+        imagePreviews.innerHTML = '';
+        mainImageSelection.innerHTML = '';
+
+        var files = event.target.files;
+        
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            
+            // Create an image element for each selected file
+            var imgElement = document.createElement("img");
+            imgElement.src = URL.createObjectURL(file);  // Create a URL for the file
+            imgElement.style.maxWidth = "200px";  // Set max width for preview
+            imgElement.style.margin = "5px";  // Add some margin
+            
+            // Append the image preview to the preview section
+            imagePreviews.appendChild(imgElement);
+
+            // Create a radio button for selecting the main image
+            var radioLabel = document.createElement("label");
+            radioLabel.textContent = "Set as main image for this upload?";
+            
+            var radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "main_img";
+            radio.value = file.name;  // Use the file name as the value for the radio button
+
+            mainImageSelection.appendChild(radioLabel);
+            mainImageSelection.appendChild(radio);
+            mainImageSelection.appendChild(document.createElement("br"));
+        }
+    });
+</script>
+
+{% endblock js_block %}
+
+

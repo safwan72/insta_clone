@@ -66,25 +66,21 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
   </div>
   {% else %}
   <div class="row g-4 my-5">
-    {% for post in posts %} {% if post.featured_image %}
-    <div class="col-sm-6 col-lg-4 gallery-item">
-      {% comment %}
-      <img src="{{ post.featured_image.image.url }}" class="gallery-img" loading="lazy" alt="Gallery Image 1"
-        data-bs-toggle="modal" data-bs-target="#photoModal{{ image.id }}" />
-      {% endcomment %}
+    {% for post in posts %} 
+    {% if post.featured_image %}
+    <div class="col-sm-6 gallery-item">
       <img src="{{ post.featured_image.image.url }}" class="gallery-img" loading="lazy" data-bs-toggle="modal"
         data-bs-target="#carouselModal{{ post.id }}" />
+        <p style="margin-top:20px;">{{post.caption}}</p>
+        <p style="margin-top:20px;">{{post.like_count}} Likes {{post.comment_count}} Comments</p>
+
     </div>
     {% endif %}
-  </div>
   <!-- End of Row -->
-  <div class="modal fade" id="carouselModal{{ post.id }}" tabindex="-1"
-    aria-labelledby="carouselModalLabel{{ post.id }}" aria-hidden="true">
+    <div class="modal fade" id="carouselModal{{ post.id }}" tabindex="-1" aria-labelledby="carouselModalLabel{{ post.id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          {{profile.is_private}}
-
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -95,7 +91,7 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
                   {% for image in post.images.all %}
                   <div class="carousel-item {% if forloop.first %}active{% endif %}">
                     <img src="{{ image.image.url }}" class="d-block" alt="Image {{ image.id }}"
-                      style="width: 80%; height: 80%; object-fit: contain" />
+                      style="width: 100%; height: 450px; object-fit: contain" />
                   </div>
                   {% endfor %}
                 </div>
@@ -112,6 +108,7 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
               </div>
             </div>
             <div class="col-sm-6" style="height:400px;overflow-y:scroll;">
+              <p>{{post.caption}}</p>
               {% for comment in post.post_comment.all %}
               <div style="display:flex;align-items:center;margin-bottom:15px;">
                 <div>
@@ -140,14 +137,18 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
         </div>
       </div>
     </div>
-    {% empty %}
+    </div>
+
+
+  {% empty %}
     <!-- Content when there are no posts -->
     <h4 style="text-align:center;margin:15px 0;">No posts available at the moment.</h4>
-    {% endfor %}
-
-    {%endif%}
-
   </div>
+  {% endfor %}
+</div>
+    {%endif%}
+  </div>
+
 
 </div>
 {% endblock body_block %}

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse,get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q,Count
-
+import random
 # Create your views here.
 @login_required
 def home_index(request):
@@ -70,7 +70,8 @@ def home_index(request):
             if post.id not in seen_ids:
                 posts.append(post)  # Add post to the unique posts list
                 seen_ids.add(post.id)  # Mark this post ID as seen
-            
+        # Randomize the order of posts
+    random.shuffle(posts)  # This shuffles the posts in place
     stories=[]
     userProfile=Profile.objects.filter(user_id=request.user.id)
     if userProfile:
@@ -135,5 +136,51 @@ def explore_view(request):
     return render(request, "Explore/Explore.html",context={"users":users})
 
 
+
+def add_Post(request):
+    stories=[]
+    userProfile=Profile.objects.filter(user_id=request.user.id)
+    if userProfile:
+        userProfile = userProfile[0]
+        my_stories = models.Story.objects.filter(user=userProfile).all()
+        if my_stories:
+            for story in my_stories:
+                story.is_expired()
+                if(story.expired==False):
+                    # print(story,story.expired)
+                    stories.append(story)
+        user1 = userProfile.my_followers.all()
+        if user1:
+            for friend in user1:
+                all_stories = models.Story.objects.filter(user=friend.me).all()
+                if all_stories:
+                    for story in all_stories:
+                        story.is_expired()
+                        if(story.expired==False):
+                            # print(story,story.expired)
+                            stories.append(story)
+                            
+    if request.method == 'POST':
+        post_form = forms.PostForm(request.POST)
+        
+        if post_form.is_valid():
+            # Save the post (caption)
+            post = post_form.save(commit=False)
+            post.user = userProfile  # Assuming logged-in user is the author
+            post.save()
+
+            # Get the uploaded images from the request
+            uploaded_images = request.FILES.getlist('images')
+            main_image_selected = request.POST.get('main_img')  # Get the main image from the request (if any)
+
+            # Save each image and link it to the post
+            for img in uploaded_images:
+                is_main = img.name == main_image_selected  # You can change this logic based on your needs
+                models.Image.objects.create(post=post, image=img, main_img=is_main)
+
+    else:
+        post_form = forms.PostForm()
+
+    return render(request, "Post/Post.html",context={'stories':stories,'form':post_form})
 
 

@@ -8,7 +8,13 @@ class ImageUploadForm(forms.ModelForm):
         model=models.Story
         fields = ['story']
         
-        
+
+class PostForm(forms.ModelForm):
+    caption=forms.CharField(required=False,widget=forms.Textarea(attrs={'col':8,"row":6,'placeholder':"Enter Your Caption Here",'class':'form-control'}))    
+
+    class Meta:
+        model=models.Posts
+        fields = ('caption',)
         
 class CommentForm(forms.ModelForm):
     text=forms.CharField(required=False,widget=forms.TextInput(attrs={'placeholder':"Enter Your Comment here",'class':'form-control'}))    

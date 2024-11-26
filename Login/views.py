@@ -82,13 +82,13 @@ def myprofile(request,id):
     if already_followed:
             for follower in already_followed:  
                 if user_profile==follower.me:
-                    print(follower.me)
-                    print(user_profile)
                     already_following=True  # The user is a follower
 # The user is not a follower
     # Fetch all posts by the user
-    print(already_following)
-    posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags','post_comment')
+    posts = Posts.objects.filter(user=user_profile).select_related('user').prefetch_related('images', 'hashtags','post_comment').annotate(
+                like_count=Count('liked_post'),
+                comment_count=Count('post_comment')
+            )
         # Fetch the featured image for each post (main_img=True)
     for post in posts:
         post.featured_image = post.images.filter(main_img=True).first()

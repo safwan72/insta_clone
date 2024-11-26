@@ -120,24 +120,7 @@ class Followers(models.Model):
 
     def __str__(self):
         return self.me.user.email + " 's Follower's"
-    
-    
-class Connection(models.Model):
-    sender = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="sender"
-    )
-    receiver = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name="receiver"
-    )
-    date = models.DateTimeField(auto_now_add=True)
-    accepted = models.BooleanField(default=False)
 
-    class Meta:
-        verbose_name_plural = "User connection"
-        db_table = "User connection"
-
-    def __str__(self):
-        return self.sender.user.email + " > Sent Request to " + self.receiver.user.email
     
     
 @receiver(post_save, sender=User)
