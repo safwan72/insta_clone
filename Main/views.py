@@ -45,8 +45,8 @@ def home_index(request):
         user_posts = models.Posts.objects.filter(
         Q(user=userProfile)
     ).prefetch_related('images', 'hashtags', 'post_comment', 'liked_post').annotate(
-        like_count=Count('liked_post'),
-        comment_count=Count('post_comment')
+        like_count=Count('liked_post',distinct=True),
+        comment_count=Count('post_comment',distinct=True)
     )
         all_posts.extend(user_posts)  # Add posts from the user
 
@@ -58,14 +58,17 @@ def home_index(request):
                 friend_posts = models.Posts.objects.filter(
                 Q(user=friend.me)  # Get posts from the friend
             ).prefetch_related('images', 'hashtags', 'post_comment', 'liked_post').annotate(
-                like_count=Count('liked_post'),
-                comment_count=Count('post_comment')
+                like_count=Count('liked_post',distinct=True),
+                comment_count=Count('post_comment',distinct=True)
             )
                 all_posts.extend(friend_posts)  # Add posts from the friend
 
     # Now 'all_posts' contains the posts from userProfile and their followers
     if all_posts:
         for post in all_posts:
+            like=models.Like.objects.filter(post=post,user=userProfile)
+            if like:
+                post.already_liked=True
             post.featured_image = post.images.filter(main_img=True).first()
             if post.id not in seen_ids:
                 posts.append(post)  # Add post to the unique posts list
@@ -184,3 +187,24 @@ def add_Post(request):
     return render(request, "Post/Post.html",context={'stories':stories,'form':post_form})
 
 
+@login_required
+def liked(request,id):
+    post=models.Posts.objects.get(id=id)
+    userProfile=Profile.objects.filter(user_id=request.user.id)
+    if userProfile:
+        userProfile = userProfile[0]
+    already_liked=models.Like.objects.filter(post=post,user=userProfile)
+    if not already_liked:
+        liked_post=models.Like(post=post,user=userProfile)
+        liked_post.save()
+    return HttpResponseRedirect(reverse('App_Main:home'))
+
+@login_required
+def unliked(request,id):
+    post=models.Posts.objects.get(id=id)
+    userProfile=Profile.objects.filter(user_id=request.user.id)
+    if userProfile:
+        userProfile = userProfile[0]
+    already_liked=models.Like.objects.filter(post=post,user=userProfile)
+    already_liked.delete()
+    return HttpResponseRedirect(reverse('App_Main:home'))

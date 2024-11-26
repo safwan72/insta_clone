@@ -37,7 +37,7 @@ class Like(models.Model):
     liked_date=models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.post.id +" liked by "+self.user.username
+        return f"post --- {self.post.id} liked by {self.user.user.username}"
     
 
 # Model to represent an Image associated with a Post
