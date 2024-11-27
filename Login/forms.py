@@ -62,3 +62,54 @@ class LoginForm(AuthenticationForm):
             }
         ),
     )
+    
+    
+class EditProfile(forms.ModelForm):
+    full_name=forms.CharField(
+                required=False,
+        widget=forms.TextInput(
+            attrs={"placeholder": "Update your full name", "class": "form-control my-3"}
+        ),
+            label='Full Name',
+    )
+    phone=forms.CharField(
+                        required=False,
+
+        widget=forms.NumberInput(
+            attrs={"placeholder": "Update your Number", "class": "form-control my-3"}
+        ),
+            label='Phone',
+    )
+    address=forms.CharField(
+                        required=False,
+
+        widget=forms.Textarea(
+            attrs={"placeholder": "Update your Address", "class": "form-control my-3"}
+        ),
+            label='Address',
+    )
+    bio=forms.CharField(
+                        required=False,
+
+        widget=forms.Textarea(
+            attrs={"placeholder": "Update your BIO", "class": "form-control my-3"}
+        ),
+            label='Your Bio',
+    )
+    website=forms.CharField(
+                        required=False,
+
+        widget=forms.TextInput(
+            attrs={"placeholder": "Update your Website", "class": "form-control my-3"}
+        ),
+            label='Your Website',
+    )
+    is_private=forms.BooleanField(
+                        required=False,
+
+            label='Keep Profile Private',
+    )
+
+    class Meta:
+        model=models.Profile
+        exclude=('user','id',)

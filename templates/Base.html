@@ -199,7 +199,7 @@
                   y="0"
                   width="16"
                   height="16"
-                  href="{% static 'images/instaicon.png' %}"
+                  href="{{ request.user.userprofile.profile_pic.url }}"
                 />
 
                 {% comment %}

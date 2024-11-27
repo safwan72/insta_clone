@@ -28,7 +28,10 @@ ease-in-out; } {% endblock css_block %} {% block body_block %}
         <p style="margin-bottom: 0">{{profile.website}}</p>
         <p style="margin-bottom: 0">Followed By : another user</p>
       </div>
-      {% if not my_profile %}
+      {% if my_profile %}
+      <a href="{% url 'App_Login:edit_profile' profile.user.id %}" class="btn btn-primary mt-3">Edit Profile</a>
+
+      {% else %}
       {% if already_followed %}
       <a href="{% url 'App_Login:unfollow' profile.user.id %}" class="btn btn-primary mt-3">Following</a>
       {%endif%}

@@ -73,7 +73,7 @@ class Comment(models.Model):
     
     
 def upload_image(instance, filename):
-    return "story/{instance.user.user.username}/{instance.user.user.username}{instance.story_upload_date}{instance.id}.png".format(instance=instance)
+    return "story/{instance.user.user.username}/{instance.user.user.username}{instance.story_upload_date}{instance.user.user.id}.png".format(instance=instance)
 
 
 

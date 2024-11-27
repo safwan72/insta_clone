@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django_cleanup.apps.CleanupConfig",
      'widget_tweaks',  # Add this line
+         "crispy_forms",
+    "crispy_bootstrap4",
 ]
 
 MIDDLEWARE = [

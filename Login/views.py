@@ -141,3 +141,18 @@ def unfollow(request,id):
             #     print(following_user.my_followers)
                 followers.myfollowers.remove(follower_user)
     return HttpResponseRedirect(reverse('App_Main:home'))
+
+
+
+
+@login_required
+def edit_profile(request,id):
+    user_profile = Profile.objects.get(user_id=id)
+    print(user_profile)
+    form=forms.EditProfile(instance=user_profile)
+    if request.method=='POST':
+        form=forms.EditProfile(request.POST,request.FILES,instance=user_profile)
+        form.save(commit=True)
+        form=forms.EditProfile(instance=user_profile)
+        return HttpResponseRedirect(reverse(f"App_Login:profile",kwargs={'id': id}))
+    return render(request, "Profile/EditProfile.html",context={'form':form})
